@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#5b1900" />
+  <meta name="description" content="Calculadora de precificação dos kits Faça Você Mesma da Essência CK, com conversão BRL/JPY, frete e distribuição no Japão." />
+  <title>Calculadora de Kits | Essência CK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wine: #5b1900;
+      --wine-dark: #411405;
+      --purple: #3f305d;
+      --eggplant: #24152e;
+      --ink: #29212b;
+      --muted: #766d77;
+      --line: #e8e2e4;
+      --paper: #fffdfb;
+      --shell: #f7f5f4;
+      --soft: #f2edef;
+      --white: #ffffff;
+      --serif: 'Playfair Display', Georgia, serif;
+      --sans: 'DM Sans', Arial, sans-serif;
+      --shadow: 0 16px 45px rgba(40, 24, 38, .055);
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--shell); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.55; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .45; }
+    :focus-visible { outline: 3px solid rgba(63,48,93,.3); outline-offset: 3px; }
+    .container { width: min(1280px, calc(100% - 48px)); margin-inline: auto; }
+    .site-top { background: var(--white); border-bottom: 1px solid var(--line); }
+    .top-inner { min-height: 80px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .brand { display: flex; align-items: center; gap: 13px; text-decoration: none; color: var(--wine); }
+    .brand-mark { width: 43px; height: 43px; border: 1px solid rgba(91,25,0,.28); border-radius: 50%; display: grid; place-items: center; font-family: var(--serif); font-size: 17px; font-weight: 600; letter-spacing: -.07em; }
+    .brand-title { font: 600 22px/1 var(--serif); letter-spacing: -.035em; }
+    .brand-sub { display: block; margin-top: 6px; color: #8c8189; font-size: 9px; letter-spacing: .23em; text-transform: uppercase; font-weight: 700; }
+    .top-tag { display: flex; align-items: center; gap: 9px; color: var(--muted); font-size: 12px; letter-spacing: .11em; font-weight: 700; text-transform: uppercase; }
+    .top-tag::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--wine); }
+    .hero { background: var(--wine); color: white; position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; right: -160px; bottom: -300px; width: 600px; height: 600px; border: 1px solid rgba(255,255,255,.13); border-radius: 50%; pointer-events: none; }
+    .hero::after { content: ''; position: absolute; right: -65px; bottom: -225px; width: 410px; height: 410px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; pointer-events: none; }
+    .hero-inner { display: grid; grid-template-columns: minmax(0,1fr) 280px; gap: 48px; align-items: center; padding: 53px 0 60px; position: relative; z-index: 1; }
+    .eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .27em; text-transform: uppercase; }
+    .hero .eyebrow { color: #e4cfc9; }
+    h1 { margin: 15px 0 15px; font: 500 clamp(32px,4vw,53px)/1.15 var(--serif); letter-spacing: -.025em; max-width: 710px; }
+    .hero p { max-width: 610px; margin: 0; color: #f0e5e1; font-size: 14px; line-height: 1.85; }
+    .hero-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+    .hero-chip { border: 1px solid rgba(255,255,255,.27); padding: 6px 12px; border-radius: 100px; color: #fff; font-size: 11px; letter-spacing: .045em; }
+    .bottle-art { display: flex; align-items: flex-end; justify-content: center; gap: 18px; align-self: stretch; min-height: 220px; position: relative; }
+    .bottle { position: relative; width: 95px; height: 134px; border: 1.5px solid rgba(255,255,255,.62); border-radius: 15px 15px 22px 22px; box-shadow: inset 0 0 0 9px rgba(255,255,255,.028); margin-bottom: 4px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+    .bottle::before { content: ''; position: absolute; width: 42px; height: 23px; background: #462036; border: 1.5px solid #dfc7cd; border-radius: 3px 3px 0 0; top: -23px; left: 50%; transform: translateX(-50%); }
+    .bottle::after { content: ''; position: absolute; width: 32px; height: 8px; border: 1px solid rgba(255,255,255,.55); top: -32px; left: 50%; transform: translateX(-50%); }
+    .bottle.bottle-2 { width: 114px; height: 162px; border-color: #f0dce5; }
+    .bottle strong { font-family: var(--serif); font-weight: 500; font-size: 22px; }
+    .bottle small { font-size: 8px; text-transform: uppercase; letter-spacing: .2em; margin-top: 6px; color: #ead0d5; }
+    .bottle-label { width: 77%; padding: 17px 4px; border-top: 1px solid rgba(255,255,255,.32); border-bottom: 1px solid rgba(255,255,255,.32); text-align: center; }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, .94fr); gap: 26px; align-items: start; padding: 33px 0 65px; }
+    .stack { display: grid; gap: 20px; }
+    .panel { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; box-shadow: var(--shadow); padding: 26px; }
+    .panel-header { display: flex; align-items: flex-start; gap: 13px; margin-bottom: 23px; }
+    .step { flex: 0 0 auto; width: 31px; height: 31px; border-radius: 50%; display: grid; place-items: center; color: var(--wine); background: #f5eae7; font-weight: 700; font-size: 12px; }
+    .section-title { font: 500 23px/1.2 var(--serif); letter-spacing: -.012em; margin: 0; color: var(--eggplant); }
+    .section-sub { margin: 7px 0 0; color: var(--muted); font-size: 12px; }
+    .field-label { font-size: 11px; font-weight: 700; color: #655762; text-transform: uppercase; letter-spacing: .095em; display: block; margin-bottom: 8px; }
+    .field { width: 100%; border: 1px solid #ded6dc; background: #fff; border-radius: 9px; height: 45px; padding: 0 13px; outline: none; color: var(--ink); transition: border-color .2s, box-shadow .2s; }
+    .field:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(63,48,93,.09); }
+    select.field { appearance: none; padding-right: 37px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' viewBox='0 0 24 24' stroke='%235b1900' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E"); background-position: right 12px center; background-repeat: no-repeat; }
+    .essence-choice { display: grid; grid-template-columns: minmax(0, 1fr) 140px; gap: 14px; }
+    .value-box { background: var(--soft); border-radius: 9px; padding: 8px 13px; min-height: 45px; display: flex; align-items: center; color: var(--wine); font-size: 17px; font-weight: 700; }
+    .field-hint { color: var(--muted); font-size: 11px; margin: 12px 0 0; }
+    .list-head { display: grid; grid-template-columns: minmax(0,1fr) 114px 28px; gap: 10px; border-bottom: 1px solid var(--line); padding: 0 0 9px; color: #897e86; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; font-weight: 700; }
+    .essence-row { display: grid; grid-template-columns: minmax(0,1fr) 114px 28px; gap: 10px; align-items: center; min-height: 51px; border-bottom: 1px solid #f0ebee; padding: 6px 0; }
+    .essence-name { font-size: 12px; font-weight: 600; word-break: break-word; }
+    .money-input { height: 36px; width: 100%; border: 1px solid #e2dbe1; border-radius: 8px; padding: 0 11px; background: #fff; text-align: right; color: var(--wine); font-weight: 700; outline: none; }
+    .money-input:focus { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(63,48,93,.09); }
+    .icon-button { width: 28px; height: 32px; display: grid; place-items: center; background: transparent; border: 0; color: #927d86; border-radius: 6px; transition: .2s; }
+    .icon-button:hover { color: #9b3b3b; background: #f8eeef; }
+    .add-form { background: #f8f5f6; border: 1px dashed #d9cbd2; border-radius: 10px; padding: 15px; margin-top: 18px; }
+    .add-form h3 { color: var(--eggplant); font-size: 12px; margin: 0 0 12px; font-weight: 700; }
+    .add-grid { display: grid; grid-template-columns: minmax(0,1fr) 116px; gap: 11px; }
+    .add-form .field { height: 41px; }
+    .btn { border: 1px solid transparent; border-radius: 9px; padding: 11px 15px; font-size: 12px; font-weight: 700; transition: background .2s, transform .2s; white-space: nowrap; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--wine); color: white; }
+    .btn-primary:hover { background: var(--wine-dark); }
+    .btn-outline { border-color: #dfd3db; color: var(--purple); background: white; }
+    .btn-outline:hover { background: #f8f4f7; }
+    .add-form .btn { margin-top: 11px; }
+    .components-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .component { border: 1px solid #e9e1e6; padding: 15px; border-radius: 10px; background: #fff; min-height: 97px; }
+    .component .small { font-size: 11px; color: var(--muted); margin: 0 0 6px; }
+    .component .name { display: block; font-weight: 700; color: var(--ink); font-size: 13px; margin-bottom: 6px; }
+    .component .cost { color: var(--wine); font-weight: 700; font-size: 16px; }
+    .component .unit { color: #978994; font-size: 11px; font-weight: 500; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+    .field-group { min-width: 0; }
+    .input-wrap { position: relative; }
+    .input-wrap .prefix { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 700; color: #877984; pointer-events: none; }
+    .input-wrap input { padding-left: 35px; }
+    .field-meta { margin-top: 6px; color: #938692; font-size: 11px; }
+    .exchange-row { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 12px; }
+    .exchange-help { margin: 12px 0 0; color: var(--muted); font-size: 11px; }
+    .status { margin-top: 8px; color: var(--purple); font-size: 11px; min-height: 18px; }
+    .results-sticky { position: sticky; top: 20px; }
+    .results-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 0 0 15px; padding: 0 3px; }
+    .results-heading h2 { margin: 0; color: var(--eggplant); font: 500 27px var(--serif); }
+    .results-heading span { font-size: 10px; font-weight: 700; color: #857782; letter-spacing: .13em; text-transform: uppercase; }
+    .kit-card { border: 1px solid #e6dfe2; background: #fff; border-radius: 17px; box-shadow: var(--shadow); overflow: hidden; margin-bottom: 17px; }
+    .kit-card.premium { border-color: #cabccf; }
+    .kit-upper { background: var(--wine); color: white; padding: 20px 22px; position: relative; }
+    .kit-card.premium .kit-upper { background: var(--purple); }
+    .kit-index { text-transform: uppercase; font-size: 9px; letter-spacing: .22em; opacity: .73; font-weight: 700; }
+    .kit-name { margin: 6px 0 3px; font: 500 25px var(--serif); }
+    .kit-description { font-size: 11px; opacity: .83; margin: 0; max-width: 350px; }
+    .kit-weight { position: absolute; top: 20px; right: 20px; font-size: 10px; background: rgba(255,255,255,.12); padding: 4px 9px; border: 1px solid rgba(255,255,255,.2); border-radius: 100px; }
+    .kit-price-block { padding: 20px 22px 18px; background: #fffcfb; border-bottom: 1px solid #eee7ea; }
+    .price-label { display: block; color: #877982; text-transform: uppercase; font-size: 10px; font-weight: 700; letter-spacing: .13em; }
+    .price-main { color: var(--wine); font: 700 clamp(31px,3vw,40px)/1.3 var(--serif); letter-spacing: -.026em; font-variant-numeric: tabular-nums; margin: 3px 0 0; }
+    .premium .price-main { color: var(--purple); }
+    .price-jpy { color: var(--ink); font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: -1px; }
+    .price-jpy small { font-weight: 500; font-size: 11px; color: #8c8189; margin-left: 8px; }
+    .kit-details { padding: 16px 22px 21px; }
+    .detail-toggle { display: flex; width: 100%; align-items: center; justify-content: space-between; border: 0; color: var(--eggplant); font-weight: 700; font-size: 12px; background: none; padding: 1px 0 8px; }
+    .chevron { transition: transform .2s; font-size: 15px; }
+    details[open] .chevron { transform: rotate(180deg); }
+    details summary { list-style: none; cursor: pointer; }
+    details summary::-webkit-details-marker { display: none; }
+    .cost-line { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 11.5px; color: #766c75; }
+    .cost-line strong { color: #3c303a; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .cost-line.total { border-top: 1px solid #eae2e6; margin-top: 6px; padding-top: 10px; font-weight: 700; color: var(--ink); }
+    .cost-line.total strong { color: var(--wine); }
+    .cost-line.emphasis { background: #f8f4f6; padding: 7px 9px; border-radius: 7px; margin: 5px -9px; }
+    .copy-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 13px; background: white; border: 1px solid #e4d9e0; border-radius: 9px; padding: 10px; font-size: 11px; color: var(--purple); font-weight: 700; }
+    .copy-btn:hover { background: #f8f4f7; }
+    .note-card { padding: 18px 19px; border-radius: 13px; border: 1px solid #e6dfe3; color: #716571; font-size: 11px; line-height: 1.75; background: #f9f6f8; }
+    .note-card strong { color: var(--eggplant); }
+    .note-card p { margin: 7px 0 0; }
+    .footer { border-top: 1px solid var(--line); padding: 25px 0 40px; color: #867982; text-align: center; font-size: 11px; background: var(--white); }
+    .footer strong { font-family: var(--serif); color: var(--wine); font-size: 15px; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--eggplant); color: white; border-radius: 9px; box-shadow: 0 10px 30px rgba(0,0,0,.18); padding: 13px 18px; font-size: 12px; opacity: 0; pointer-events: none; transform: translateY(15px); transition: .25s; z-index: 10; max-width: min(340px, calc(100vw - 40px)); }
+    .toast.visible { opacity: 1; transform: translateY(0); }
+    @media (max-width: 1050px) { .workspace { grid-template-columns: minmax(0,1fr) minmax(330px,.9fr); gap: 18px; } .panel { padding: 20px; } .hero-inner { grid-template-columns: 1fr 210px; gap: 15px; } }
+    @media (max-width: 800px) { .hero-inner { padding: 45px 0; } .bottle-art { display: none; } .workspace { grid-template-columns: 1fr; } .results-sticky { position: static; } .results-col { order: -1; } .results-list { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 15px; } .kit-card { margin-bottom: 0; } .kit-name { font-size: 21px; } .kit-upper, .kit-price-block, .kit-details { padding-left: 17px; padding-right: 17px; } .price-main { font-size: 31px; } .price-jpy { font-size: 19px; } .note-card { margin-top: 15px; } }
+    @media (max-width: 600px) { .container { width: min(100% - 30px, 1280px); } .top-inner { min-height: 68px; } .brand-title { font-size: 19px; } .brand-mark { width: 39px; height: 39px; } .top-tag { font-size: 9px; max-width: 110px; text-align: right; line-height: 1.6; } .hero-inner { padding: 33px 0 37px; } h1 { font-size: 34px; } .hero p { font-size: 12px; } .workspace { padding-top: 24px; gap: 26px; } .results-list { grid-template-columns: 1fr; } .kit-name { font-size: 25px; } .price-main { font-size: 37px; } .panel { border-radius: 13px; padding: 19px; } .section-title { font-size: 22px; } .essence-choice, .two-col { grid-template-columns: 1fr; } .components-grid { gap: 8px; } .component { padding: 13px 10px; } .exchange-row { grid-template-columns: 1fr; } .exchange-row .btn { width: 100%; } .hero-chip { font-size: 10px; } }
+    @media print { .site-top, .hero, .stack, .copy-btn, .footer, .toast, .note-card { display: none !important; } .container { width: 100%; } .workspace { display: block; padding: 0; } .results-list { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; } .results-sticky { position: static; } .kit-card { break-inside: avoid; } details > * { display: block !important; } }
+  </style>
+</head>
+<body>
+  <header class="site-top">
+    <div class="container top-inner">
+      <a class="brand" href="#inicio" aria-label="Essência CK — início">
+        <div class="brand-mark" aria-hidden="true">CK</div>
+        <div><span class="brand-title">Essência CK</span><span class="brand-sub">Personalização &amp; essência</span></div>
+      </a>
+      <div class="top-tag">Ferramenta interna de preços</div>
+    </div>
+  </header>
+
+  <section class="hero" id="inicio">
+    <div class="container hero-inner">
+      <div>
+        <div class="eyebrow">Essência CK · Kits faça você mesma</div>
+        <h1>Uma precificação à altura de cada essência.</h1>
+        <p>Simule o preço dos kits Essencial e Intense para o Japão. Altere essências, ajuste o frete e acompanhe o valor final em reais e ienes, em tempo real.</p>
+        <div class="hero-chips"><span class="hero-chip">Frasco de 100 ml</span><span class="hero-chip">Multiplicador 2,5×</span><span class="hero-chip">Distribuição Japão 10%</span></div>
+      </div>
+      <div class="bottle-art" aria-hidden="true">
+        <div class="bottle"><div class="bottle-label"><strong>CK</strong><small>Essencial</small></div></div>
+        <div class="bottle bottle-2"><div class="bottle-label"><strong>CK</strong><small>Intense</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <main class="container workspace">
+    <div class="stack">
+      <section class="panel" aria-labelledby="sec-essencia">
+        <div class="panel-header"><span class="step">01</span><div><h2 class="section-title" id="sec-essencia">Escolha a essência</h2><p class="section-sub">A essência selecionada entra no cálculo dos dois kits.</p></div></div>
+        <div class="essence-choice">
+          <div><label for="essenceSelect" class="field-label">Essência para a simulação · 30 ml</label><select id="essenceSelect" class="field" aria-label="Essência escolhida"></select></div>
+          <div><span class="field-label">Custo da essência</span><div class="value-box" id="selectedEssencePrice">R$ 43,90</div></div>
+        </div>
+        <p class="field-hint">Os valores podem ser alterados no cadastro logo abaixo. As mudanças aparecem automaticamente nos dois resultados.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="sec-cadastro">
+        <div class="panel-header"><span class="step">02</span><div><h2 class="section-title" id="sec-cadastro">Cadastro de essências</h2><p class="section-sub">Edite preços e adicione quantas fragrâncias precisar.</p></div></div>
+        <div class="list-head"><span>Essência</span><span style="text-align:right">Custo / 30 ml</span><span aria-hidden="true"></span></div>
+        <div id="essenceRows" aria-label="Lista de essências e valores"></div>
+        <form class="add-form" id="addEssenceForm">
+          <h3>+ Cadastrar nova essência</h3>
+          <div class="add-grid"><div><label class="field-label" for="newEssenceName">Nome da essência</label><input class="field" id="newEssenceName" name="nome" placeholder="Ex.: Scandal" maxlength="75" required /></div><div><label class="field-label" for="newEssencePrice">Preço / 30 ml</label><input class="field" id="newEssencePrice" name="preco" type="text" inputmode="decimal" placeholder="43,90" required /></div></div>
+          <button type="submit" class="btn btn-primary">Adicionar essência</button>
+        </form>
+        <p class="field-hint">Os dados editados ficam salvos neste navegador. Não é necessário instalar nada.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="sec-fixos">
+        <div class="panel-header"><span class="step">03</span><div><h2 class="section-title" id="sec-fixos">Componentes com custo fixo</h2><p class="section-sub">Cada kit considera uma unidade de cada componente correspondente.</p></div></div>
+        <div class="components-grid">
+          <div class="component"><span class="name">Galaxolide</span><span class="small">Fixador · 30 ml</span><div class="cost">R$ 9,30</div></div>
+          <div class="component"><span class="name">Hedione</span><span class="small">Componente do Intense · 30 ml</span><div class="cost">R$ 10,90</div></div>
+          <div class="component"><span class="name">Iso E Super</span><span class="small">Componente do Intense · 30 ml</span><div class="cost">R$ 14,90</div></div>
+          <div class="component"><span class="name">Frasco</span><span class="small">Frasco de perfume · 100 ml</span><div class="cost">R$ 12,00</div></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="sec-frete">
+        <div class="panel-header"><span class="step">04</span><div><h2 class="section-title" id="sec-frete">Frete de cada kit</h2><p class="section-sub">Modifique os custos sempre que houver alteração de tarifa.</p></div></div>
+        <div class="two-col">
+          <div class="field-group"><label class="field-label" for="shipping1">Kit Essencial · 150 g</label><div class="input-wrap"><span class="prefix">R$</span><input class="field" id="shipping1" type="text" inputmode="decimal" autocomplete="off" aria-label="Valor do frete do Kit Essencial" value="18,20" /></div><div class="field-meta">Frete de referência: R$ 18,20</div></div>
+          <div class="field-group"><label class="field-label" for="shipping2">Kit Intense · 200 g</label><div class="input-wrap"><span class="prefix">R$</span><input class="field" id="shipping2" type="text" inputmode="decimal" autocomplete="off" aria-label="Valor do frete do Kit Intense" value="18,20" /></div><div class="field-meta">Frete de referência: R$ 18,20</div></div>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="sec-cambio">
+        <div class="panel-header"><span class="step">05</span><div><h2 class="section-title" id="sec-cambio">Cotação do iene</h2><p class="section-sub">Use o câmbio para converter os preços finais em ienes.</p></div></div>
+        <div class="exchange-row">
+          <div class="field-group"><label class="field-label" for="exchangeRate">Valor de ¥ para cada R$ 1</label><div class="input-wrap"><span class="prefix">¥</span><input class="field" id="exchangeRate" type="text" inputmode="decimal" value="28,815" aria-label="Quantos ienes valem um real" /></div></div>
+          <button class="btn btn-outline" type="button" id="refreshRate">↻ Atualizar cotação</button>
+        </div>
+        <p class="exchange-help">Referência inicial de 05/11/2026: R$ 1 = ¥ 28,815. Pode ser editada manualmente ou atualizada pela internet. A cotação comercial efetiva pode variar.</p>
+        <div class="status" id="exchangeStatus" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+
+    <aside class="results-col" aria-label="Resultado das simulações de preço">
+      <div class="results-sticky">
+        <div class="results-heading"><h2>Preço de venda</h2><span>Atualização automática</span></div>
+        <div class="results-list">
+          <article class="kit-card" id="kitCard1">
+            <div class="kit-upper"><span class="kit-index">Kit 01 · Fixação equilibrada</span><span class="kit-weight">150 g</span><h3 class="kit-name">Essencial CK</h3><p class="kit-description">Essência + Galaxolide + frasco de 100 ml.</p></div>
+            <div class="kit-price-block"><span class="price-label">Preço final em reais</span><div class="price-main" id="kit1Brl" aria-live="polite">—</div><div class="price-jpy" id="kit1Jpy">— <small>em ienes</small></div></div>
+            <div class="kit-details"><details open><summary class="detail-toggle">Composição do preço <span class="chevron" aria-hidden="true">⌄</span></summary><div id="kit1Breakdown"></div></details><button class="copy-btn" type="button" data-copy-kit="1">▣ &nbsp; Copiar orçamento deste kit</button></div>
+          </article>
+          <article class="kit-card premium" id="kitCard2">
+            <div class="kit-upper"><span class="kit-index">Kit 02 · Perfil mais encorpado</span><span class="kit-weight">200 g</span><h3 class="kit-name">Intense CK</h3><p class="kit-description">Essência + Galaxolide + Hedione + Iso E Super + frasco de 100 ml.</p></div>
+            <div class="kit-price-block"><span class="price-label">Preço final em reais</span><div class="price-main" id="kit2Brl" aria-live="polite">—</div><div class="price-jpy" id="kit2Jpy">— <small>em ienes</small></div></div>
+            <div class="kit-details"><details open><summary class="detail-toggle">Composição do preço <span class="chevron" aria-hidden="true">⌄</span></summary><div id="kit2Breakdown"></div></details><button class="copy-btn" type="button" data-copy-kit="2">▣ &nbsp; Copiar orçamento deste kit</button></div>
+          </article>
+        </div>
+        <div class="note-card">
+          <strong>Como o preço é formado</strong>
+          <p>Somamos o custo dos itens do kit, multiplicamos por <strong>2,5</strong>, acrescentamos <strong>10% desse subtotal</strong> para distribuição no Japão e, por último, o <strong>frete específico</strong> do kit.</p>
+          <p><strong>Importante:</strong> os custos consideram embalagens de 30 ml dos componentes, conforme informado. Como os volumes das embalagens não equivalem necessariamente à fórmula final de 100 ml, confirme as quantidades usadas na receita. Álcool/base alcoólica, materiais extras e outros tributos não foram incluídos, pois não tiveram custos informados.</p>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer"><div class="container"><strong>Essência CK</strong> &nbsp;·&nbsp; Calculadora interna de precificação &nbsp;·&nbsp; Kits faça você mesma · Japão</div></footer>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    'use strict';
+    const STORAGE_KEY = 'essencia_ck_calculadora_diy_v1';
+    const FIXED = Object.freeze({ galaxolide: 9.30, hedione: 10.90, isoESuper: 14.90, bottle: 12.00 });
+    const MULTIPLIER = 2.5;
+    const JAPAN_DISTRIBUTION = 0.10;
+    const DEFAULT_ESSENCES = [
+      { id: 'coco', name: 'Coco Mademoiselle', price: 43.90 },
+      { id: 'himalaya', name: 'Creed Himalaya', price: 75.90 },
+      { id: 'jadore', name: "Dior J'Adore", price: 43.90 },
+      { id: 'missdior', name: 'Dior Miss Dior', price: 43.90 }
+    ];
+    const defaults = () => ({ essences: DEFAULT_ESSENCES.map(e => ({...e})), selectedId: 'coco', shipping1: 18.20, shipping2: 18.20, exchangeRate: 28.815 });
+    const $ = id => document.getElementById(id);
+    const brl = value => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
+    const jpy = value => new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY', maximumFractionDigits: 0 }).format(value);
+    const decimal = (value, places=2) => new Intl.NumberFormat('pt-BR', { minimumFractionDigits: places, maximumFractionDigits: places }).format(value);
+    const money2 = n => Math.round((n + Number.EPSILON) * 100) / 100;
+    let toastTimeout;
+
+    function parseAmount(value) {
+      let s = String(value ?? '').replace(/[^0-9.,-]/g, '').trim();
+      if (!s || s === '-' || s === ',' || s === '.') return NaN;
+      const comma = s.lastIndexOf(',');
+      const dot = s.lastIndexOf('.');
+      if (comma >= 0 && dot >= 0) {
+        const decimalSeparator = comma > dot ? ',' : '.';
+        const thousandsSeparator = decimalSeparator === ',' ? '.' : ',';
+        s = s.split(thousandsSeparator).join('').replace(decimalSeparator, '.');
+      } else if (comma >= 0) {
+        s = s.replace(',', '.');
+      }
+      const n = Number(s);
+      return Number.isFinite(n) && n >= 0 ? n : NaN;
+    }
+    function esc(s) { return String(s).replace(/[&<>"']/g, ch => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[ch])); }
+    function store() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (_) {} }
+    function load() {
+      const d = defaults();
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
+        if (!saved || !Array.isArray(saved.essences)) return d;
+        const essences = saved.essences.filter(e => e && typeof e.name === 'string' && e.name.trim() && typeof e.id === 'string' && Number.isFinite(e.price) && e.price >= 0).map(e => ({ id: e.id, name: e.name.slice(0,75), price: e.price }));
+        if (!essences.length) return d;
+        d.essences = essences;
+        d.selectedId = essences.some(e => e.id === saved.selectedId) ? saved.selectedId : essences[0].id;
+        for (const field of ['shipping1','shipping2','exchangeRate']) {
+          if (Number.isFinite(saved[field]) && saved[field] >= 0) d[field] = saved[field];
+        }
+      } catch (_) {}
+      return d;
+    }
+    let state = load();
+    function chosen() { return state.essences.find(e => e.id === state.selectedId) || state.essences[0]; }
+    function notify(message) {
+      const el = $('toast');
+      el.textContent = message;
+      el.classList.add('visible');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => el.classList.remove('visible'), 2800);
+    }
+    function renderSelect() {
+      const select = $('essenceSelect');
+      select.innerHTML = '';
+      for (const essence of state.essences) {
+        const option = document.createElement('option');
+        option.value = essence.id;
+        option.textContent = essence.name;
+        select.append(option);
+      }
+      select.value = state.selectedId;
+    }
+    function renderEssenceRows() {
+      const container = $('essenceRows');
+      container.innerHTML = state.essences.map(essence => `
+        <div class="essence-row" data-id="${esc(essence.id)}">
+          <div class="essence-name">${esc(essence.name)}</div>
+          <input class="money-input" type="text" inputmode="decimal" aria-label="Preço de ${esc(essence.name)}" value="${decimal(essence.price)}" data-price-id="${esc(essence.id)}" />
+          <button type="button" class="icon-button" data-remove-id="${esc(essence.id)}" aria-label="Excluir ${esc(essence.name)}" title="Excluir essência" ${state.essences.length === 1 ? 'disabled' : ''}>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2m3 0-1 14H6L5 6m5 4v6m4-6v6"/></svg>
+          </button>
+        </div>`).join('');
+    }
+    function calculate(kit) {
+      const essence = chosen();
+      const items = [{label:`Essência ${essence.name} · 30 ml`, cost:essence.price}, {label:'Galaxolide · 30 ml',cost:FIXED.galaxolide}];
+      if (kit === 2) items.push({label:'Hedione · 30 ml',cost:FIXED.hedione},{label:'Iso E Super · 30 ml',cost:FIXED.isoESuper});
+      items.push({label:'Frasco · 100 ml',cost:FIXED.bottle});
+      const cost = money2(items.reduce((acc, it) => acc + it.cost,0));
+      const subtotal = money2(cost * MULTIPLIER);
+      const distribution = money2(subtotal * JAPAN_DISTRIBUTION);
+      const shipping = kit === 1 ? state.shipping1 : state.shipping2;
+      const total = money2(subtotal + distribution + shipping);
+      return { essence, items, cost, subtotal, distribution, shipping, total, totalJpy: Math.round(total * state.exchangeRate), kit };
+    }
+    function costRow(label, amount, type='') { return `<div class="cost-line ${type}"><span>${esc(label)}</span><strong>${brl(amount)}</strong></div>`; }
+    function renderKit(kit) {
+      const result = calculate(kit);
+      $('kit'+kit+'Brl').textContent = brl(result.total);
+      $('kit'+kit+'Jpy').innerHTML = `${esc(jpy(result.totalJpy))} <small>em ienes</small>`;
+      $('kit'+kit+'Breakdown').innerHTML = [
+        ...result.items.map(item => costRow(item.label,item.cost)),
+        costRow('Custo total dos itens', result.cost,'total'),
+        costRow('Subtotal de venda (custo × 2,5)', result.subtotal),
+        costRow('Distribuição no Japão (10%)', result.distribution),
+        costRow(`Frete (${kit === 1 ? '150 g' : '200 g'})`, result.shipping),
+        costRow('PREÇO FINAL', result.total,'total emphasis')
+      ].join('');
+    }
+    function renderResults() {
+      $('selectedEssencePrice').textContent = brl(chosen().price);
+      renderKit(1);
+      renderKit(2);
+    }
+    function bindMoney(id, field, digits=2) {
+      const input = $(id);
+      input.value = decimal(state[field],digits);
+      input.addEventListener('input', () => {
+        const n = parseAmount(input.value);
+        if (Number.isFinite(n)) { state[field] = n; store(); renderResults(); }
+      });
+      input.addEventListener('blur', () => {
+        const n = parseAmount(input.value);
+        if (Number.isFinite(n)) state[field] = n;
+        input.value = decimal(state[field],digits);
+        store(); renderResults();
+      });
+    }
+    $('essenceSelect').addEventListener('change', event => { state.selectedId = event.target.value; store(); renderResults(); });
+    $('essenceRows').addEventListener('input', event => {
+      const id = event.target.dataset.priceId;
+      if (!id) return;
+      const item = state.essences.find(e => e.id === id);
+      const n = parseAmount(event.target.value);
+      if (item && Number.isFinite(n)) { item.price = n; store(); renderResults(); }
+    });
+    $('essenceRows').addEventListener('focusout', event => {
+      const id = event.target.dataset.priceId;
+      if (!id) return;
+      const item = state.essences.find(e => e.id === id);
+      if (item) event.target.value = decimal(item.price);
+    });
+    $('essenceRows').addEventListener('click', event => {
+      const btn = event.target.closest('[data-remove-id]');
+      if (!btn || state.essences.length <= 1) return;
+      const item = state.essences.find(e => e.id === btn.dataset.removeId);
+      if (!item || !window.confirm(`Excluir a essência “${item.name}” do cadastro?`)) return;
+      state.essences = state.essences.filter(e => e.id !== item.id);
+      if (state.selectedId === item.id) state.selectedId = state.essences[0].id;
+      store(); renderSelect(); renderEssenceRows(); renderResults(); notify('Essência removida do cadastro.');
+    });
+    $('addEssenceForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const name = $('newEssenceName').value.trim().replace(/\s+/g, ' ');
+      const price = parseAmount($('newEssencePrice').value);
+      if (!name) { notify('Informe o nome da essência.'); return; }
+      if (!Number.isFinite(price)) { notify('Informe um preço válido.'); $('newEssencePrice').focus(); return; }
+      if (state.essences.some(e => e.name.toLocaleLowerCase('pt-BR') === name.toLocaleLowerCase('pt-BR'))) { notify('Essa essência já está cadastrada.'); return; }
+      const id = 'ess_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2,7);
+      state.essences.push({id,name,price:money2(price)});
+      state.selectedId = id;
+      store(); renderSelect(); renderEssenceRows(); renderResults();
+      $('addEssenceForm').reset(); notify('Essência adicionada e selecionada.');
+    });
+    bindMoney('shipping1','shipping1');
+    bindMoney('shipping2','shipping2');
+    bindMoney('exchangeRate','exchangeRate',3);
+    $('refreshRate').addEventListener('click', async () => {
+      const btn = $('refreshRate');
+      const status = $('exchangeStatus');
+      btn.disabled = true;
+      btn.textContent = 'Consultando…';
+      status.textContent = 'Consultando cotação pública BRL/JPY…';
+      try {
+        let rate;
+        let source;
+        try {
+          const res = await fetch('https://open.er-api.com/v6/latest/BRL', { cache: 'no-store' });
+          if (!res.ok) throw new Error('Fonte indisponível');
+          const data = await res.json();
+          rate = data?.rates?.JPY;
+          if (!Number.isFinite(rate) || rate <= 0) throw new Error('Cotação inválida');
+          source = 'ExchangeRate-API';
+        } catch (_) {
+          const res = await fetch('https://api.frankfurter.app/latest?from=BRL&to=JPY', { cache: 'no-store' });
+          if (!res.ok) throw new Error('Fonte indisponível');
+          const data = await res.json();
+          rate = data?.rates?.JPY;
+          if (!Number.isFinite(rate) || rate <= 0) throw new Error('Cotação inválida');
+          source = 'Frankfurter';
+        }
+        state.exchangeRate = rate;
+        $('exchangeRate').value = decimal(rate, 3);
+        store(); renderResults();
+        status.textContent = `Cotação atualizada (${source}): R$ 1 ≈ ¥ ${decimal(rate,3)}. Taxa de referência, sem tarifas de conversão.`;
+      } catch (error) {
+        status.textContent = 'Não foi possível atualizar automaticamente. Você pode digitar a cotação manualmente.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '↻ Atualizar cotação';
+      }
+    });
+    async function copyText(value) {
+      if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(value); return; }
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      if (!copied) throw new Error('Não foi possível copiar.');
+    }
+    document.querySelectorAll('[data-copy-kit]').forEach(btn => btn.addEventListener('click', async () => {
+      const kit = Number(btn.dataset.copyKit);
+      const r = calculate(kit);
+      const name = kit === 1 ? 'Essencial CK' : 'Intense CK';
+      const rows = r.items.map(item => `• ${item.label}: ${brl(item.cost)}`).join('\n');
+      const message = `ESSÊNCIA CK — PRECIFICAÇÃO INTERNA\nKit: ${name}\nEssência: ${r.essence.name}\n${rows}\nCusto total: ${brl(r.cost)}\nSubtotal × 2,5: ${brl(r.subtotal)}\nDistribuição Japão (10%): ${brl(r.distribution)}\nFrete: ${brl(r.shipping)}\nPREÇO FINAL: ${brl(r.total)} / ${jpy(r.totalJpy)}\nCâmbio utilizado: R$ 1 = ¥ ${decimal(state.exchangeRate,3)}.\nCálculo não inclui insumos não informados.`;
+      try { await copyText(message); notify(`Orçamento do Kit ${name} copiado.`); }
+      catch (_) { notify('Não foi possível copiar automaticamente neste navegador.'); }
+    }));
+    renderSelect();
+    renderEssenceRows();
+    renderResults();
+  </script>
+</body>
+</html>
